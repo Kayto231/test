@@ -87,14 +87,3 @@ document.querySelector('.check').addEventListener('click', function () {
   }
 });
 // logic for the button 'continue'
-document.querySelector('.cont').addEventListener('click', function () {
-  displayMessage('Отгадываем.');
-  display('.btn.check', 'Проверить!');
-  display('.number', '?');
-  displayNumber('#222', '15rem');
-  display('.guess', '');
-  scorer--;
-  right = getRandomInt(20);
-  console.log(right);
-  // document.querySelector('.check').value = button.disabled = false;
-});

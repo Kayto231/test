@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="shortcut icon" href="#" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Угадай номер!</title>
+  </head>
+  <body>
+    <header>
+      <h1>Угадай номер!</h1>
+      <p class="between">(От 1 до 20)</p>
+      <button class="btn again">Попробывать снова!</button>
+      <div class="number">?</div>
+    </header>
+    <main>
+      <section class="left">
+        <input type="number" class="guess" />
+        <button class="btn check">Проверить!</button>
+      </section>
+      <section class="right">
+        <p class="message">Отгадываю</p>
+        <p class="label-score">💯 Счет: <span class="score">20</span></p>
+        <p class="label-highscore">
+          🥇 Высший счет: <span class="highscore">0</span>
+        </p>
+      </section>
+      <section class="left">
+        <input type="hidden" class="keep" />
+        <button class="btn cont">Продолжить!</button>
+      </section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>

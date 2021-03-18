@@ -57,7 +57,7 @@ document.querySelector('.check').addEventListener('click', function () {
       displayMessage('Правильный номер!');
       displayNumber('#60b347', '30rem');
       display('.btn.check', 'Продолжить!');
-      display('.numebr', right);
+      display('.number', right);
       score++;
       display('.score', score);
       scorer++;

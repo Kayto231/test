@@ -1,89 +1,116 @@
 'use strict';
-// Also one pretending option to do the same random value
-// const number = Math.trunc(Math.random() * 20)
-// Function to get a random value that needs to be guessed.
-function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max)) + 1;
-}
+// Stoaring values
+const score0 = document.getElementById('score--0');
+const score1 = document.getElementById('score--1');
 
-//function .message.textContent
-function displayMessage(message) {
-  document.querySelector('.message').textContent = message;
-}
-function display(choose, string) {
-  document.querySelector(choose).textContent = string;
-}
-//FUNCTION to chacnge the screen and width of the box number
-function displayNumber(color, number) {
-  document.querySelector('body').style.backgroundColor = color;
-  document.querySelector('.number').style.width = number;
-}
-// Storing in value the random value needed to be found.
-let right = (document.querySelector('.number').value = getRandomInt(20));
+const player0 = document.querySelector('.player--0');
+const player1 = document.querySelector('.player--1');
 
-let score = 20;
-document.querySelector('.highscore').textContent = 0;
-const button = document.querySelector('.check');
-let highScore = 0;
-let scorer = 0;
-// Logging the right value into the console
-console.log(document.querySelector('.number').value);
-// Setting a function to an 'Again' button so it gets reloaded;
-// document.querySelector('.again').addEventListener('click', function () {
-//   location.reload();
-//   return;
-// });
-document.querySelector('.again').addEventListener('click', function () {
-  score = 20;
-  display('.score', score);
-  display('.highscore', highScore);
-  display('.btn.check', 'Проверить!');
-  displayMessage('Отгадываем.');
-  displayNumber('#222', '15rem');
-  display('.number', '?');
-  scorer = 0;
-  right = getRandomInt(20);
-  console.log(right);
+const current0 = document.getElementById('current--0');
+const current1 = document.getElementById('current--1');
+
+const dice = document.querySelector('.dice');
+
+const btnNew = document.querySelector('.btn--new');
+const btnRoll = document.querySelector('.btn--roll');
+const btnHold = document.querySelector('.btn--hold');
+
+const scores = [0, 0];
+let randomNumber = 0;
+let currentScore = 0;
+let activePlayer = 0;
+
+// Starting conditions
+score0.textContent = 0;
+score1.textContent = 0;
+current0.textContent = 0;
+current1.textContent = 0;
+dice.classList.add('hidden');
+
+const disableBtn = function () {
+  btnRoll.disabled = true;
+  btnHold.disabled = true;
+  // btnNew.disabled = true;
+};
+
+const switchPlayer = function () {
+  document.getElementById(`current--${activePlayer}`).textContent = 0;
+  currentScore = 0;
+  activePlayer = activePlayer === 0 ? 1 : 0;
+  player0.classList.toggle('player--active');
+  player1.classList.toggle('player--active');
+};
+
+//randomizer function
+const randomRoll = function () {
+  randomNumber = Math.trunc(Math.random() * 6) + 1;
+  return randomNumber;
+};
+
+//function for reset
+const reset = function () {
+  score0.textContent = 0;
+  score1.textContent = 0;
+  current0.textContent = 0;
+  current1.textContent = 0;
+  dice.classList.add('hidden');
+  document
+    .querySelector(`.player--${activePlayer}`)
+    .classList.remove('player--winner');
+  currentScore = 0;
+  activePlayer = 0;
+  for (let i = 0; i < scores.length; i++) {
+    scores[i] = 0;
+  }
+  player0.classList.add('player--active');
+  player1.classList.remove('player--active');
+  btnRoll.disabled = false;
+  btnHold.disabled = false;
+  btnRoll.classList.remove('hidden');
+  btnHold.classList.remove('hidden');
+};
+
+// Rolling button functionality
+btnRoll.addEventListener('click', function () {
+  randomRoll();
+  dice.classList.remove('hidden');
+  dice.src = `dice-${randomNumber}.png`;
+
+  if (randomNumber !== 1) {
+    currentScore += randomNumber;
+    document.getElementById(
+      `current--${activePlayer}`
+    ).textContent = currentScore;
+  } else {
+    switchPlayer();
+  }
+  console.log(randomNumber);
 });
 
-// Setting a main function to a check button so it compares it with the value that is set and needs to be found.
-document.querySelector('.check').addEventListener('click', function () {
-  const guess = Number(document.querySelector('.guess').value);
+//restores all values
+btnNew.addEventListener('click', reset);
 
-  if (!guess) {
-    document.querySelector('.message').textContent = 'Неправильный номер!';
-  } else if (guess === right) {
-    if (scorer === 0) {
-      displayMessage('Правильный номер!');
-      displayNumber('#60b347', '30rem');
-      display('.btn.check', 'Продолжить!');
-      display('.number', right);
-      score++;
-      display('.score', score);
-      scorer++;
-      if (highScore < score) {
-        highScore = score;
-        display('.highscore', highScore);
-      }
-    } else if (scorer === 1) {
-      display('.btn.check', 'Проверить!');
-      displayMessage('Отгадываем.');
-      display('.number', '?');
-      displayNumber('#222', '15rem');
-      display('.guess', '');
-      right = getRandomInt(20);
-      console.log(right);
-      scorer--;
-    }
-  } else if (guess !== right) {
-    if (score >= 1) {
-      document.querySelector('.message').textContent =
-        guess > right ? 'Попробуйте меньшее число' : 'Попробуйте большее число';
-      score--;
-      display('.score', score);
-    } else if (score === 0) {
-      displayMessage('Вы проиграли:(');
-    }
+// holding button functionality
+btnHold.addEventListener('click', function () {
+  scores[activePlayer] += currentScore;
+  document.getElementById(`score--${activePlayer}`).textContent =
+    scores[activePlayer];
+
+  console.log(scores);
+
+  if (scores[activePlayer] >= 100) {
+    document
+      .querySelector(`.player--${activePlayer}`)
+      .classList.add('player--winner');
+    document
+      .querySelector(`.player--${activePlayer}`)
+      .classList.remove('player--active');
+    document.querySelector('.dice').classList.add('hidden');
+    btnRoll.disabled = true;
+    btnHold.disabled = true;
+    btnRoll.classList.add('hidden');
+    btnHold.classList.add('hidden');
+  } else {
+    switchPlayer();
   }
 });
-// logic for the button 'continue'
